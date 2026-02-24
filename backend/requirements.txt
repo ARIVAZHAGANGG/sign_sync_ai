@@ -1,0 +1,13 @@
+flask
+flask-cors
+opencv-python
+mediapipe
+tensorflow
+numpy
+pandas
+pyttsx3
+scikit-learn
+flasgger
+textblob
+gtts
+gunicorn
