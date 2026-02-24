@@ -1,11 +1,6 @@
 flask
 flask-cors
-mediapipe
 numpy
-pandas
 pyttsx3
-scikit-learn
 flasgger
-textblob
-gtts
 gunicorn
