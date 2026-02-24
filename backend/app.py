@@ -10,8 +10,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)
-
+# Enable CORS for all domains to prevent Vercel blocking
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 # ─────────────────────────────────────────────
 # Gesture Classes
 # ─────────────────────────────────────────────
