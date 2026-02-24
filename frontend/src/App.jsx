@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://sign-sync-ai-2.onrender.com';
 const MP_BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/hands';
 
 /* ─────────────────────────────────────────────────────────────
