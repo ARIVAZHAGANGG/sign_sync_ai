@@ -80,6 +80,6 @@ frontend/
 - **Model Storage**: Use **Firebase Storage** or S3 for large `.h5` files.
 
 ---
-Developed with ❤️ by Antigravity AI
+
 
 # sign_sync_ai
