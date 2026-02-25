@@ -21,14 +21,14 @@ export const AuthProvider = ({ children }) => {
     }, [token]);
 
     const login = async (email, password) => {
-        const res = await axios.post('https://sign-sync-ai-p2nw.onrender.com/api/auth/login', { email, password });
+        const res = await axios.post(`${import.meta.env.VITE_NODE_API_BASE_URL || 'http://localhost:5001'}/api/auth/login`, { email, password });
         setToken(res.data.token);
         setUser(res.data.user);
         return res.data;
     };
 
     const register = async (email, password) => {
-        const res = await axios.post('https://sign-sync-ai-p2nw.onrender.com/api/auth/register', { email, password });
+        const res = await axios.post(`${import.meta.env.VITE_NODE_API_BASE_URL || 'http://localhost:5001'}/api/auth/register`, { email, password });
         setToken(res.data.token);
         setUser(res.data.user);
         return res.data;

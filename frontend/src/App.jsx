@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://sign-sync-ai-2.onrender.com';
+const API_BASE = import.meta.env.VITE_PY_API_BASE_URL || 'http://127.0.0.1:5000';
 const MP_BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/hands';
 
 /* ─────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ const CyberBackground = () => {
       ctx.clearRect(0, 0, W, H);
 
       // Grid
-      ctx.strokeStyle = 'rgba(0,245,255,0.04)';
+      ctx.strokeStyle = 'rgba(16,185,129,0.04)';
       ctx.lineWidth = 1;
       const gSize = 48;
       for (let x = 0; x < W; x += gSize) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
@@ -46,7 +46,7 @@ const CyberBackground = () => {
       scan = (scan + 1) % H;
       const sg = ctx.createLinearGradient(0, scan - 60, 0, scan + 60);
       sg.addColorStop(0, 'transparent');
-      sg.addColorStop(0.5, 'rgba(0,245,255,0.06)');
+      sg.addColorStop(0.5, 'rgba(16,185,129,0.06)');
       sg.addColorStop(1, 'transparent');
       ctx.fillStyle = sg;
       ctx.fillRect(0, scan - 60, W, 120);
@@ -58,7 +58,7 @@ const CyberBackground = () => {
         if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,245,255,${p.a * 0.5})`;
+        ctx.fillStyle = `rgba(16,185,129,${p.a * 0.5})`;
         ctx.fill();
       });
 
@@ -67,7 +67,7 @@ const CyberBackground = () => {
       const dirs = [[1, 1], [-1, 1], [1, -1], [-1, -1]];
       corners.forEach(([cx, cy], i) => {
         const [dx, dy] = dirs[i];
-        ctx.strokeStyle = 'rgba(0,245,255,0.5)';
+        ctx.strokeStyle = 'rgba(16,185,129,0.5)';
         ctx.lineWidth = 2;
         ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + dx * 40, cy); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy + dy * 40); ctx.stroke();
@@ -91,9 +91,9 @@ const ConfidenceRing = ({ value = 0 }) => {
   return (
     <svg width="100" height="100" viewBox="0 0 100 100">
       {/* Track */}
-      <circle cx="50" cy="50" r={R} fill="none" stroke="rgba(0,245,255,0.1)" strokeWidth="6" />
+      <circle cx="50" cy="50" r={R} fill="none" stroke="rgba(16,185,129,0.1)" strokeWidth="6" />
       {/* Purple back ring */}
-      <circle cx="50" cy="50" r={R} fill="none" stroke="rgba(124,58,237,0.2)" strokeWidth="3" />
+      <circle cx="50" cy="50" r={R} fill="none" stroke="rgba(245,166,35,0.2)" strokeWidth="3" />
       {/* Animated arc */}
       <motion.circle
         cx="50" cy="50" r={R}
@@ -106,17 +106,17 @@ const ConfidenceRing = ({ value = 0 }) => {
         transition={{ duration: 0.4, ease: 'easeOut' }}
         style={{
           transform: 'rotate(-90deg)', transformOrigin: '50% 50%',
-          filter: 'drop-shadow(0 0 6px #00F5FF)'
+          filter: 'drop-shadow(0 0 6px #10B981)'
         }}
       />
       <defs>
         <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#00F5FF" />
-          <stop offset="100%" stopColor="#7C3AED" />
+          <stop offset="0%" stopColor="#10B981" />
+          <stop offset="100%" stopColor="#F5A623" />
         </linearGradient>
       </defs>
       {/* Centre label */}
-      <text x="50" y="54" textAnchor="middle" fill="#00F5FF"
+      <text x="50" y="54" textAnchor="middle" fill="#10B981"
         fontSize="13" fontWeight="900" fontFamily="monospace">
         {Math.round(value * 100)}%
       </text>
@@ -143,7 +143,7 @@ const Waveform = ({ active }) => {
           : 4;
         const x = i * bw + bw * 0.2;
         const y = (c.height - h) / 2;
-        ctx.fillStyle = `rgba(0,245,255,${0.4 + Math.sin(t + i) * 0.3})`;
+        ctx.fillStyle = `rgba(16,185,129,${0.4 + Math.sin(t + i) * 0.3})`;
         ctx.beginPath();
         ctx.roundRect(x, y, bw * 0.6, h, 2);
         ctx.fill();
@@ -163,9 +163,9 @@ const Waveform = ({ active }) => {
 const Panel = ({ children, style = {}, className = '' }) => (
   <div className={className} style={{
     background: 'rgba(11,15,26,0.75)',
-    border: '1px solid rgba(0,245,255,0.2)',
+    border: '1px solid rgba(16,185,129,0.2)',
     backdropFilter: 'blur(20px)',
-    boxShadow: '0 0 24px rgba(0,245,255,0.08), inset 0 0 24px rgba(0,245,255,0.02)',
+    boxShadow: '0 0 24px rgba(16,185,129,0.08), inset 0 0 24px rgba(16,185,129,0.02)',
     ...style,
   }}>
     {children}
@@ -175,7 +175,7 @@ const Panel = ({ children, style = {}, className = '' }) => (
 /* ─────────────────────────────────────────────────────────────
    NEON TEXT
 ───────────────────────────────────────────────────────────── */
-const Neon = ({ children, color = '#00F5FF', size = 14, weight = 700, style = {} }) => (
+const Neon = ({ children, color = '#10B981', size = 14, weight = 700, style = {} }) => (
   <span style={{
     color,
     fontWeight: weight,
@@ -438,7 +438,7 @@ export default function App() {
     content: { position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' },
   };
 
-  const gestureLabelColor = confidence > 0.85 ? '#00F5FF' : confidence > 0.5 ? '#a78bfa' : '#ef4444';
+  const gestureLabelColor = confidence > 0.85 ? '#10B981' : confidence > 0.5 ? '#a78bfa' : '#ef4444';
 
   return (
     <div style={S.root}>
@@ -451,12 +451,12 @@ export default function App() {
       {/* Ambient glows */}
       <div style={{
         position: 'fixed', top: '-20%', left: '-10%', width: 600, height: 600,
-        background: 'radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(245,166,35,0.12) 0%, transparent 70%)',
         borderRadius: '50%', pointerEvents: 'none', zIndex: 0
       }} />
       <div style={{
         position: 'fixed', bottom: '-20%', right: '-10%', width: 600, height: 600,
-        background: 'radial-gradient(circle, rgba(0,245,255,0.08) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)',
         borderRadius: '50%', pointerEvents: 'none', zIndex: 0
       }} />
 
@@ -467,50 +467,50 @@ export default function App() {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '0 28px', height: 68,
           background: 'rgba(11,15,26,0.9)',
-          borderBottom: '1px solid rgba(0,245,255,0.15)',
+          borderBottom: '1px solid rgba(16,185,129,0.15)',
           backdropFilter: 'blur(16px)',
           position: 'sticky', top: 0, zIndex: 50,
-          boxShadow: '0 0 30px rgba(0,245,255,0.06)',
+          boxShadow: '0 0 30px rgba(16,185,129,0.06)',
         }}>
           {/* Brand */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             {/* Icon */}
             <div style={{
               width: 42, height: 42, borderRadius: 10,
-              background: 'linear-gradient(135deg,#00F5FF22,#7C3AED44)',
-              border: '1px solid rgba(0,245,255,0.4)',
+              background: 'linear-gradient(135deg,#10B98122,#F5A62344)',
+              border: '1px solid rgba(16,185,129,0.4)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 0 16px rgba(0,245,255,0.3)',
+              boxShadow: '0 0 16px rgba(16,185,129,0.3)',
             }}>
               {/* Hex icon */}
               <svg width="22" height="22" viewBox="0 0 22 22">
                 <polygon points="11,2 20,7 20,17 11,22 2,17 2,7"
-                  fill="none" stroke="#00F5FF" strokeWidth="1.5"
-                  style={{ filter: 'drop-shadow(0 0 4px #00F5FF)' }} />
+                  fill="none" stroke="#10B981" strokeWidth="1.5"
+                  style={{ filter: 'drop-shadow(0 0 4px #10B981)' }} />
                 <polygon points="11,6 16,9 16,15 11,18 6,15 6,9"
-                  fill="rgba(0,245,255,0.1)" stroke="#7C3AED" strokeWidth="1" />
+                  fill="rgba(16,185,129,0.1)" stroke="#F5A623" strokeWidth="1" />
               </svg>
             </div>
             <div>
               <div style={{
                 fontFamily: 'Orbitron,monospace', fontSize: 17, fontWeight: 900,
                 letterSpacing: 3,
-                background: 'linear-gradient(90deg,#00F5FF,#7C3AED)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+                background: 'linear-gradient(90deg,#10B981,#F5A623)',
+                WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent'
               }}>
                 SIGN SYNC AI
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
                 <span style={{
                   width: 6, height: 6, borderRadius: '50%',
-                  background: isConnected ? '#00F5FF' : '#ef4444',
-                  boxShadow: isConnected ? '0 0 6px #00F5FF' : '0 0 6px #ef4444',
+                  background: isConnected ? '#10B981' : '#ef4444',
+                  boxShadow: isConnected ? '0 0 6px #10B981' : '0 0 6px #ef4444',
                   display: 'inline-block',
                   animation: isConnected ? 'pulse 2s infinite' : 'none'
                 }} />
                 <span style={{
                   fontSize: 9, fontFamily: 'monospace', letterSpacing: 2,
-                  color: isConnected ? '#00F5FF99' : '#ef444499', textTransform: 'uppercase'
+                  color: isConnected ? '#10B98199' : '#ef444499', textTransform: 'uppercase'
                 }}>
                   {isConnected ? `ENGINE: ${engineType}` : 'ENGINE OFFLINE'}
                 </span>
@@ -523,13 +523,13 @@ export default function App() {
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 9, letterSpacing: 2, color: '#ffffff40', textTransform: 'uppercase', fontFamily: 'monospace' }}>FRAME RATE</div>
               <Neon size={20} weight={900}>{fps}</Neon>
-              <span style={{ fontSize: 9, color: '#00F5FF80', marginLeft: 3, fontFamily: 'monospace' }}>FPS</span>
+              <span style={{ fontSize: 9, color: '#10B98180', marginLeft: 3, fontFamily: 'monospace' }}>FPS</span>
             </div>
-            <div style={{ width: 1, height: 32, background: 'rgba(0,245,255,0.15)' }} />
+            <div style={{ width: 1, height: 32, background: 'rgba(16,185,129,0.15)' }} />
             <div style={{ textAlign: 'center' }}>
               <div style={{ fontSize: 9, letterSpacing: 2, color: '#ffffff40', textTransform: 'uppercase', fontFamily: 'monospace' }}>CONFIDENCE</div>
               <Neon size={20} weight={900}>{Math.round(confidence * 100)}</Neon>
-              <span style={{ fontSize: 9, color: '#7C3AED80', marginLeft: 3, fontFamily: 'monospace' }}>%</span>
+              <span style={{ fontSize: 9, color: '#F5A62380', marginLeft: 3, fontFamily: 'monospace' }}>%</span>
             </div>
           </div>
 
@@ -538,20 +538,20 @@ export default function App() {
             {/* Language toggle */}
             <button onClick={() => setIsTamil(v => !v)} style={{
               padding: '7px 16px', borderRadius: 8, cursor: 'pointer',
-              background: isTamil ? 'rgba(124,58,237,0.25)' : 'rgba(0,245,255,0.08)',
-              border: `1px solid ${isTamil ? '#7C3AED88' : 'rgba(0,245,255,0.25)'}`,
-              color: isTamil ? '#a78bfa' : '#00F5FF',
+              background: isTamil ? 'rgba(245,166,35,0.25)' : 'rgba(16,185,129,0.08)',
+              border: `1px solid ${isTamil ? '#F5A62388' : 'rgba(16,185,129,0.25)'}`,
+              color: isTamil ? '#a78bfa' : '#10B981',
               fontSize: 12, fontWeight: 700, fontFamily: 'monospace', letterSpacing: 1,
               transition: 'all 0.2s',
-              boxShadow: isTamil ? '0 0 12px rgba(124,58,237,0.3)' : '0 0 12px rgba(0,245,255,0.1)',
+              boxShadow: isTamil ? '0 0 12px rgba(245,166,35,0.3)' : '0 0 12px rgba(16,185,129,0.1)',
             }}>
               {isTamil ? '🇮🇳 தமிழ்' : '🌐 ENG'}
             </button>
             {/* Settings */}
             <button style={{
               width: 38, height: 38, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: 'rgba(0,245,255,0.05)', border: '1px solid rgba(0,245,255,0.15)', cursor: 'pointer',
-              color: '#00F5FF80',
+              background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.15)', cursor: 'pointer',
+              color: '#10B98180',
             }}>
               <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
@@ -580,17 +580,17 @@ export default function App() {
             }}>
               {/* Card header */}
               <div style={{
-                padding: '12px 20px', borderBottom: '1px solid rgba(0,245,255,0.1)',
+                padding: '12px 20px', borderBottom: '1px solid rgba(16,185,129,0.1)',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div style={{
-                    width: 8, height: 8, borderRadius: '50%', background: '#00F5FF',
-                    boxShadow: '0 0 8px #00F5FF', animation: 'pulse 1.5s infinite'
+                    width: 8, height: 8, borderRadius: '50%', background: '#10B981',
+                    boxShadow: '0 0 8px #10B981', animation: 'pulse 1.5s infinite'
                   }} />
                   <span style={{
                     fontFamily: 'Orbitron,monospace', fontSize: 11, letterSpacing: 2,
-                    color: '#00F5FFBB', fontWeight: 700
+                    color: '#10B981BB', fontWeight: 700
                   }}>VISUAL INPUT CHANNEL</span>
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
@@ -604,8 +604,8 @@ export default function App() {
                   )}
                   <span style={{
                     padding: '3px 10px', borderRadius: 6,
-                    background: 'rgba(0,245,255,0.08)', border: '1px solid rgba(0,245,255,0.2)',
-                    fontSize: 9, fontFamily: 'monospace', letterSpacing: 2, color: '#00F5FFBB'
+                    background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)',
+                    fontSize: 9, fontFamily: 'monospace', letterSpacing: 2, color: '#10B981BB'
                   }}>
                     HD 720p
                   </span>
@@ -631,14 +631,14 @@ export default function App() {
                     <div style={{ textAlign: 'center' }}>
                       <div style={{
                         fontFamily: 'Orbitron,monospace', fontSize: 9, letterSpacing: 3,
-                        color: '#00F5FF80', marginBottom: 8, textTransform: 'uppercase'
+                        color: '#10B98180', marginBottom: 8, textTransform: 'uppercase'
                       }}>
                         Visual Capture System
                       </div>
                       <div style={{
                         fontFamily: 'Orbitron,monospace', fontSize: 26, fontWeight: 900,
-                        background: 'linear-gradient(135deg,#00F5FF,#7C3AED)',
-                        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                        background: 'linear-gradient(135deg,#10B981,#F5A623)',
+                        WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent',
                         marginBottom: 8, letterSpacing: 2
                       }}>
                         INITIALIZE CAMERA
@@ -651,11 +651,11 @@ export default function App() {
                     <button onClick={startCamera} disabled={!mpReady}
                       style={{
                         padding: '14px 48px', borderRadius: 12, cursor: 'pointer',
-                        background: mpReady ? 'linear-gradient(135deg,rgba(0,245,255,0.15),rgba(124,58,237,0.25))' : 'rgba(255,255,255,0.05)',
-                        border: mpReady ? '1px solid rgba(0,245,255,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                        color: mpReady ? '#00F5FF' : '#ffffff40',
+                        background: mpReady ? 'linear-gradient(135deg,rgba(16,185,129,0.15),rgba(245,166,35,0.25))' : 'rgba(255,255,255,0.05)',
+                        border: mpReady ? '1px solid rgba(16,185,129,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                        color: mpReady ? '#10B981' : '#ffffff40',
                         fontFamily: 'Orbitron,monospace', fontSize: 13, fontWeight: 700, letterSpacing: 3,
-                        boxShadow: mpReady ? '0 0 30px rgba(0,245,255,0.2), inset 0 0 20px rgba(0,245,255,0.05)' : 'none',
+                        boxShadow: mpReady ? '0 0 30px rgba(16,185,129,0.2), inset 0 0 20px rgba(16,185,129,0.05)' : 'none',
                         transition: 'all 0.3s',
                       }}>
                       {mpReady ? '▶ ENGAGE VISION ENGINE' : '⟳ LOADING AI ENGINE…'}
@@ -668,14 +668,14 @@ export default function App() {
                   <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                     {/* Corner brackets */}
                     {[
-                      { top: 16, left: 16, borderTop: '2px solid #00F5FF', borderLeft: '2px solid #00F5FF' },
-                      { top: 16, right: 16, borderTop: '2px solid #00F5FF', borderRight: '2px solid #00F5FF' },
-                      { bottom: 16, left: 16, borderBottom: '2px solid #00F5FF', borderLeft: '2px solid #00F5FF' },
-                      { bottom: 16, right: 16, borderBottom: '2px solid #00F5FF', borderRight: '2px solid #00F5FF' },
+                      { top: 16, left: 16, borderTop: '2px solid #10B981', borderLeft: '2px solid #10B981' },
+                      { top: 16, right: 16, borderTop: '2px solid #10B981', borderRight: '2px solid #10B981' },
+                      { bottom: 16, left: 16, borderBottom: '2px solid #10B981', borderLeft: '2px solid #10B981' },
+                      { bottom: 16, right: 16, borderBottom: '2px solid #10B981', borderRight: '2px solid #10B981' },
                     ].map((s, i) => (
                       <div key={i} style={{
                         position: 'absolute', width: 40, height: 40,
-                        boxShadow: '0 0 8px rgba(0,245,255,0.5)', ...s
+                        boxShadow: '0 0 8px rgba(16,185,129,0.5)', ...s
                       }} />
                     ))}
 
@@ -730,16 +730,16 @@ export default function App() {
                     }}>
                       <div style={{
                         position: 'absolute', top: '50%', left: 0, right: 0, height: 1,
-                        background: 'rgba(0,245,255,0.4)', boxShadow: '0 0 4px #00F5FF'
+                        background: 'rgba(16,185,129,0.4)', boxShadow: '0 0 4px #10B981'
                       }} />
                       <div style={{
                         position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1,
-                        background: 'rgba(0,245,255,0.4)', boxShadow: '0 0 4px #00F5FF'
+                        background: 'rgba(16,185,129,0.4)', boxShadow: '0 0 4px #10B981'
                       }} />
                       <div style={{
                         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
                         width: 8, height: 8, borderRadius: '50%',
-                        background: 'rgba(0,245,255,0.8)', boxShadow: '0 0 12px #00F5FF'
+                        background: 'rgba(16,185,129,0.8)', boxShadow: '0 0 12px #10B981'
                       }} />
                     </div>
 
@@ -753,11 +753,11 @@ export default function App() {
                         style={{
                           padding: '6px 20px', borderRadius: 8,
                           background: 'rgba(11,15,26,0.8)', backdropFilter: 'blur(12px)',
-                          border: '1px solid rgba(0,245,255,0.3)',
-                          boxShadow: '0 0 20px rgba(0,245,255,0.15)',
+                          border: '1px solid rgba(16,185,129,0.3)',
+                          boxShadow: '0 0 20px rgba(16,185,129,0.15)',
                           textAlign: 'center', whiteSpace: 'nowrap',
                         }}>
-                        <div style={{ fontSize: 9, letterSpacing: 3, color: '#00F5FF80', fontFamily: 'monospace', textTransform: 'uppercase' }}>
+                        <div style={{ fontSize: 9, letterSpacing: 3, color: '#10B98180', fontFamily: 'monospace', textTransform: 'uppercase' }}>
                           GESTURE TOKEN
                         </div>
                         <div style={{
@@ -794,12 +794,12 @@ export default function App() {
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
                   {/* Waveform icon */}
                   <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-                    <path d="M12 1v22M8 5v14M4 9v6M16 5v14M20 9v6" stroke="#00F5FF" strokeWidth="1.5" strokeLinecap="round"
-                      style={{ filter: 'drop-shadow(0 0 3px #00F5FF)' }} />
+                    <path d="M12 1v22M8 5v14M4 9v6M16 5v14M20 9v6" stroke="#10B981" strokeWidth="1.5" strokeLinecap="round"
+                      style={{ filter: 'drop-shadow(0 0 3px #10B981)' }} />
                   </svg>
                   <span style={{
                     fontFamily: 'Orbitron,monospace', fontSize: 10, letterSpacing: 3,
-                    color: '#00F5FF80', textTransform: 'uppercase'
+                    color: '#10B98180', textTransform: 'uppercase'
                   }}>
                     Neural Translation Output
                   </span>
@@ -809,16 +809,16 @@ export default function App() {
                   <button onClick={speak} disabled={!sentence}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 6, padding: '7px 16px', borderRadius: 8, cursor: sentence ? 'pointer' : 'not-allowed',
-                      background: speaking ? 'rgba(0,245,255,0.2)' : 'rgba(0,245,255,0.07)',
-                      border: `1px solid ${speaking ? 'rgba(0,245,255,0.6)' : 'rgba(0,245,255,0.2)'}`,
-                      color: sentence ? '#00F5FF' : '#ffffff30',
+                      background: speaking ? 'rgba(16,185,129,0.2)' : 'rgba(16,185,129,0.07)',
+                      border: `1px solid ${speaking ? 'rgba(16,185,129,0.6)' : 'rgba(16,185,129,0.2)'}`,
+                      color: sentence ? '#10B981' : '#ffffff30',
                       fontSize: 11, fontFamily: 'monospace', fontWeight: 700, letterSpacing: 1,
-                      boxShadow: speaking ? '0 0 16px rgba(0,245,255,0.4)' : 'none',
+                      boxShadow: speaking ? '0 0 16px rgba(16,185,129,0.4)' : 'none',
                       transition: 'all 0.2s'
                     }}>
-                    <svg width="13" height="13" fill="#00F5FF" viewBox="0 0 24 24">
+                    <svg width="13" height="13" fill="#10B981" viewBox="0 0 24 24">
                       <path d="M11 5L6 9H2v6h4l5 4V5z" />
-                      {speaking && <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" stroke="#00F5FF" fill="none" strokeWidth="2" />}
+                      {speaking && <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" stroke="#10B981" fill="none" strokeWidth="2" />}
                     </svg>
                     {speaking ? 'SPEAKING…' : 'VOICE OUTPUT'}
                   </button>
@@ -845,7 +845,7 @@ export default function App() {
                     style={{
                       fontFamily: 'Orbitron,monospace', fontSize: 'clamp(22px,3.5vw,42px)',
                       fontWeight: 900, letterSpacing: 2, lineHeight: 1.2,
-                      background: 'linear-gradient(90deg,#00F5FF,#a78bfa,#00F5FF)',
+                      background: 'linear-gradient(90deg,#10B981,#a78bfa,#10B981)',
                       backgroundSize: '200%',
                       WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                       animation: 'shimmer 3s linear infinite'
@@ -865,7 +865,7 @@ export default function App() {
               {/* Waveform + info row */}
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 20,
-                paddingTop: 14, borderTop: '1px solid rgba(0,245,255,0.08)'
+                paddingTop: 14, borderTop: '1px solid rgba(16,185,129,0.08)'
               }}>
                 <Waveform active={speaking} />
                 <div style={{ flex: 1 }} />
@@ -883,7 +883,7 @@ export default function App() {
             <Panel style={{ borderRadius: 20, padding: '20px 20px 18px', textAlign: 'center' }}>
               <div style={{
                 fontSize: 9, fontFamily: 'Orbitron,monospace', letterSpacing: 3,
-                color: '#00F5FF60', textTransform: 'uppercase', marginBottom: 12
+                color: '#10B98160', textTransform: 'uppercase', marginBottom: 12
               }}>
                 Active Token Analysis
               </div>
@@ -903,14 +903,14 @@ export default function App() {
                       { label: 'ENGINE', val: engineType },
                       {
                         label: 'STATUS', val: isStreaming ? 'ACTIVE' : 'IDLE',
-                        color: isStreaming ? '#00F5FF' : '#ffffff40'
+                        color: isStreaming ? '#10B981' : '#ffffff40'
                       },
                     ].map(({ label, val, color }) => (
                       <div key={label} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                         <span style={{ fontSize: 8, fontFamily: 'monospace', color: '#ffffff30', letterSpacing: 2 }}>{label}</span>
                         <span style={{
-                          fontSize: 10, fontFamily: 'monospace', fontWeight: 700, color: color || '#7C3AED',
-                          textShadow: color ? `0 0 6px ${color}` : '0 0 6px #7C3AED'
+                          fontSize: 10, fontFamily: 'monospace', fontWeight: 700, color: color || '#F5A623',
+                          textShadow: color ? `0 0 6px ${color}` : '0 0 6px #F5A623'
                         }}>{val}</span>
                       </div>
                     ))}
@@ -923,7 +923,7 @@ export default function App() {
             <Panel style={{ borderRadius: 20, padding: '16px 18px', maxHeight: 340, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
               <div style={{
                 fontSize: 9, fontFamily: 'Orbitron,monospace', letterSpacing: 3,
-                color: '#7C3AED', textTransform: 'uppercase', marginBottom: 10, flexShrink: 0
+                color: '#F5A623', textTransform: 'uppercase', marginBottom: 10, flexShrink: 0
               }}>
                 ◈ Sign Guide — How to Sign
               </div>
@@ -934,25 +934,25 @@ export default function App() {
                     <div key={g} style={{
                       display: 'flex', alignItems: 'center', gap: 10,
                       padding: '7px 10px', borderRadius: 8,
-                      background: isActive ? 'rgba(0,245,255,0.12)' : 'rgba(0,245,255,0.02)',
-                      border: `1px solid ${isActive ? 'rgba(0,245,255,0.45)' : 'rgba(0,245,255,0.08)'}`,
-                      boxShadow: isActive ? '0 0 12px rgba(0,245,255,0.15)' : 'none',
+                      background: isActive ? 'rgba(16,185,129,0.12)' : 'rgba(16,185,129,0.02)',
+                      border: `1px solid ${isActive ? 'rgba(16,185,129,0.45)' : 'rgba(16,185,129,0.08)'}`,
+                      boxShadow: isActive ? '0 0 12px rgba(16,185,129,0.15)' : 'none',
                       transition: 'all 0.2s',
                     }}>
                       <span style={{ fontSize: 18, minWidth: 26, textAlign: 'center' }}>{emoji}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{
                           fontFamily: 'monospace', fontSize: 10, fontWeight: 700, letterSpacing: 1,
-                          color: isActive ? '#00F5FF' : '#ffffff80',
-                          textShadow: isActive ? '0 0 8px #00F5FF' : 'none',
+                          color: isActive ? '#10B981' : '#ffffff80',
+                          textShadow: isActive ? '0 0 8px #10B981' : 'none',
                         }}>{g}</div>
                         <div style={{ fontSize: 9, color: '#ffffff35', fontFamily: 'monospace', marginTop: 1 }}>{desc}</div>
                       </div>
                       {isActive && (
                         <span style={{
                           fontSize: 8, fontFamily: 'monospace', letterSpacing: 1,
-                          color: '#00F5FF', background: 'rgba(0,245,255,0.15)',
-                          padding: '2px 6px', borderRadius: 4, border: '1px solid rgba(0,245,255,0.3)',
+                          color: '#10B981', background: 'rgba(16,185,129,0.15)',
+                          padding: '2px 6px', borderRadius: 4, border: '1px solid rgba(16,185,129,0.3)',
                           flexShrink: 0
                         }}>● LIVE</span>
                       )}
@@ -966,18 +966,18 @@ export default function App() {
             {/* History Panel */}
             <Panel style={{ borderRadius: 20, flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
               <div style={{
-                padding: '14px 18px', borderBottom: '1px solid rgba(0,245,255,0.08)',
+                padding: '14px 18px', borderBottom: '1px solid rgba(16,185,129,0.08)',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between'
               }}>
                 <div style={{
                   fontSize: 9, fontFamily: 'Orbitron,monospace', letterSpacing: 3,
-                  color: '#7C3AED', textTransform: 'uppercase'
+                  color: '#F5A623', textTransform: 'uppercase'
                 }}>
                   ◈ Conversation Log
                 </div>
                 <button onClick={exportLog} style={{
                   padding: '4px 12px', borderRadius: 6, cursor: 'pointer',
-                  background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.3)',
+                  background: 'rgba(245,166,35,0.1)', border: '1px solid rgba(245,166,35,0.3)',
                   color: '#a78bfa', fontSize: 10, fontFamily: 'monospace', fontWeight: 700,
                 }}>⬇ EXPORT</button>
               </div>
@@ -995,18 +995,18 @@ export default function App() {
                       exit={{ opacity: 0, x: -20 }}
                       style={{
                         padding: '10px 14px', borderRadius: 10,
-                        background: 'rgba(0,245,255,0.03)',
-                        border: '1px solid rgba(0,245,255,0.08)',
+                        background: 'rgba(16,185,129,0.03)',
+                        border: '1px solid rgba(16,185,129,0.08)',
                         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                       }}>
                       <div>
                         <div style={{
                           fontSize: 8, fontFamily: 'monospace', letterSpacing: 2,
-                          color: '#00F5FF50', marginBottom: 3
+                          color: '#10B98150', marginBottom: 3
                         }}>SIGN TOKEN</div>
                         <div style={{
                           fontFamily: 'Orbitron,monospace', fontSize: 13, fontWeight: 700,
-                          color: '#00F5FFCC'
+                          color: '#10B981CC'
                         }}>{item.text}</div>
                       </div>
                       <div style={{ fontSize: 8, fontFamily: 'monospace', color: '#ffffff20' }}>
@@ -1020,7 +1020,7 @@ export default function App() {
                     }}>
                       <svg width="36" height="36" fill="none" viewBox="0 0 24 24" style={{ marginBottom: 12 }}>
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"
-                          fill="#00F5FF" opacity="0.5" />
+                          fill="#10B981" opacity="0.5" />
                       </svg>
                       <p style={{ fontSize: 11, fontFamily: 'monospace', color: '#ffffff50', textAlign: 'center' }}>
                         No signs detected yet.<br />Start camera to translate.
@@ -1030,13 +1030,13 @@ export default function App() {
                 </AnimatePresence>
               </div>
 
-              <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(0,245,255,0.08)' }}>
+              <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(16,185,129,0.08)' }}>
                 <button onClick={() => setTrainingOpen(true)} style={{
                   width: '100%', padding: '12px', borderRadius: 10, cursor: 'pointer',
-                  background: 'linear-gradient(135deg,rgba(0,245,255,0.1),rgba(124,58,237,0.2))',
-                  border: '1px solid rgba(0,245,255,0.3)',
-                  color: '#00F5FF', fontFamily: 'Orbitron,monospace', fontSize: 11, fontWeight: 700,
-                  letterSpacing: 2, boxShadow: '0 0 20px rgba(0,245,255,0.1)',
+                  background: 'linear-gradient(135deg,rgba(16,185,129,0.1),rgba(245,166,35,0.2))',
+                  border: '1px solid rgba(16,185,129,0.3)',
+                  color: '#10B981', fontFamily: 'Orbitron,monospace', fontSize: 11, fontWeight: 700,
+                  letterSpacing: 2, boxShadow: '0 0 20px rgba(16,185,129,0.1)',
                   transition: 'all 0.2s',
                 }}>
                   + TRAIN NEW GESTURE
@@ -1048,9 +1048,9 @@ export default function App() {
 
         {/* Footer */}
         <footer style={{
-          textAlign: 'center', padding: '14px', borderTop: '1px solid rgba(0,245,255,0.06)',
+          textAlign: 'center', padding: '14px', borderTop: '1px solid rgba(16,185,129,0.06)',
           fontSize: 9, fontFamily: 'Orbitron,monospace', letterSpacing: 3,
-          color: 'rgba(0,245,255,0.2)'
+          color: 'rgba(16,185,129,0.2)'
         }}>
           SIGNSYNC AI — QUANTUM VISION SYSTEM v2.0 © 2026
         </footer>
@@ -1068,8 +1068,8 @@ export default function App() {
               style={{
                 width: '100%', maxWidth: 480, position: 'relative', zIndex: 1,
                 background: 'rgba(11,15,26,0.97)', borderRadius: 24,
-                border: '1px solid rgba(0,245,255,0.3)',
-                boxShadow: '0 0 60px rgba(0,245,255,0.15), inset 0 0 40px rgba(0,245,255,0.03)',
+                border: '1px solid rgba(16,185,129,0.3)',
+                boxShadow: '0 0 60px rgba(16,185,129,0.15), inset 0 0 40px rgba(16,185,129,0.03)',
                 padding: 36,
               }}>
               <button onClick={handleTrainingClose}
@@ -1080,8 +1080,8 @@ export default function App() {
                 }}>✕</button>
               <div style={{
                 fontFamily: 'Orbitron,monospace', fontSize: 20, fontWeight: 900,
-                background: 'linear-gradient(90deg,#00F5FF,#7C3AED)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                background: 'linear-gradient(90deg,#10B981,#F5A623)',
+                WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent',
                 marginBottom: 6
               }}>NEURAL TRAINING LAB</div>
               <p style={{ color: '#ffffff40', fontSize: 12, marginBottom: 28, lineHeight: 1.6 }}>
@@ -1089,7 +1089,7 @@ export default function App() {
               </p>
               <div style={{ marginBottom: 16 }}>
                 <div style={{
-                  fontSize: 9, fontFamily: 'monospace', letterSpacing: 2, color: '#00F5FF80',
+                  fontSize: 9, fontFamily: 'monospace', letterSpacing: 2, color: '#10B98180',
                   textTransform: 'uppercase', marginBottom: 8
                 }}>Gesture Label</div>
                 <input
@@ -1100,18 +1100,18 @@ export default function App() {
                   disabled={captureActive}
                   style={{
                     width: '100%', boxSizing: 'border-box', padding: '12px 16px', borderRadius: 10,
-                    background: 'rgba(0,245,255,0.04)', border: '1px solid rgba(0,245,255,0.2)',
+                    background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.2)',
                     color: '#fff', fontFamily: 'Orbitron,monospace', fontSize: 13, outline: 'none'
                   }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
                 {[
-                  ['Samples Collected', `${samplesCollected} / ${SAMPLES_TARGET}`, '#00F5FF'],
-                  ['Status', captureActive ? 'CAPTURING...' : samplesCollected >= SAMPLES_TARGET ? 'DONE ✓' : 'READY', captureActive ? '#10b981' : '#7C3AED']
+                  ['Samples Collected', `${samplesCollected} / ${SAMPLES_TARGET}`, '#10B981'],
+                  ['Status', captureActive ? 'CAPTURING...' : samplesCollected >= SAMPLES_TARGET ? 'DONE ✓' : 'READY', captureActive ? '#10b981' : '#F5A623']
                 ].map(([label, val, c]) => (
                   <div key={label} style={{
                     padding: '14px', borderRadius: 12,
-                    background: 'rgba(0,245,255,0.03)', border: '1px solid rgba(0,245,255,0.1)'
+                    background: 'rgba(16,185,129,0.03)', border: '1px solid rgba(16,185,129,0.1)'
                   }}>
                     <div style={{ fontSize: 8, fontFamily: 'monospace', letterSpacing: 2, color: '#ffffff40', marginBottom: 4 }}>{label.toUpperCase()}</div>
                     <div style={{ fontFamily: 'Orbitron,monospace', fontSize: 20, fontWeight: 900, color: c, textShadow: `0 0 8px ${c}` }}>{val}</div>
@@ -1133,11 +1133,11 @@ export default function App() {
                   width: '100%', padding: '15px', borderRadius: 12, cursor: 'pointer',
                   background: captureActive
                     ? 'linear-gradient(135deg,rgba(239,68,68,0.3),rgba(239,68,68,0.15))'
-                    : 'linear-gradient(135deg,rgba(0,245,255,0.15),rgba(124,58,237,0.3))',
-                  border: captureActive ? '1px solid rgba(239,68,68,0.5)' : '1px solid rgba(0,245,255,0.4)',
-                  color: captureActive ? '#ef4444' : '#00F5FF',
+                    : 'linear-gradient(135deg,rgba(16,185,129,0.15),rgba(245,166,35,0.3))',
+                  border: captureActive ? '1px solid rgba(239,68,68,0.5)' : '1px solid rgba(16,185,129,0.4)',
+                  color: captureActive ? '#ef4444' : '#10B981',
                   fontFamily: 'Orbitron,monospace', fontSize: 13, fontWeight: 900,
-                  letterSpacing: 3, boxShadow: captureActive ? '0 0 30px rgba(239,68,68,0.2)' : '0 0 30px rgba(0,245,255,0.2)',
+                  letterSpacing: 3, boxShadow: captureActive ? '0 0 30px rgba(239,68,68,0.2)' : '0 0 30px rgba(16,185,129,0.2)',
                   transition: 'all 0.3s'
                 }}>
                 {captureActive ? '⏹ STOP CAPTURE' : samplesCollected >= SAMPLES_TARGET ? '✓ COMPLETE - CAPTURE AGAIN' : '▶ INITIALIZE CAPTURE'}
@@ -1156,7 +1156,7 @@ export default function App() {
         @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
         .custom-scroll::-webkit-scrollbar { width:4px; }
         .custom-scroll::-webkit-scrollbar-track { background:transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background:rgba(0,245,255,0.15); border-radius:99px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background:rgba(16,185,129,0.15); border-radius:99px; }
         input::placeholder { color:rgba(255,255,255,0.2); }
         button:active { transform:scale(0.97); }
       `}</style>
